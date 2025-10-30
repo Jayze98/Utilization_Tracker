@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox,
     QPushButton, QTableWidget, QTextEdit, QLineEdit, QMessageBox, QHeaderView
 )
+import requests
 
 # ------------------ Data Models ------------------
 
@@ -904,6 +905,18 @@ class TimesheetApp(QWidget):
             self.status_label.setText("Ready.")
             self.status_label.setStyleSheet("color: #555; font-size: 12px;")
 
+try:
+    response = requests.post(
+        "http://127.0.0.1:5000/submit",  # backend endpoint
+        json=export_data,
+        timeout=10
+    )
+    if response.status_code == 200:
+        print("✅ Data uploaded to central server!")
+    else:
+        print("⚠️ Server error:", response.text)
+except Exception as e:
+    print("❌ Upload failed:", e)
 
 # ------------------ Run ------------------
 
